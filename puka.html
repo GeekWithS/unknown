@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<title>Geek With S │ Own the next move</title>
+<meta name="description" content="Geek With S (GWS) is a technology-driven community empowering students, developers, and innovators. Coming Soon." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#2563EB;
+    --secondary:#06B6D4;
+    --accent:#7C3AED;
+    --success:#10B981;
+    --bg:#0F172A;
+    --surface:#1E293B;
+    --text:#F8FAFC;
+    --text-sec:#CBD5E1;
+    --grad: linear-gradient(135deg,#2563EB 0%,#06B6D4 50%,#7C3AED 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+    line-height:1.6;
+  }
+
+  /* Animated background */
+  .bg-grid{
+    position:fixed;inset:0;z-index:0;
+    background-image:
+      linear-gradient(rgba(37,99,235,.07) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(37,99,235,.07) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);
+  }
+  .blob{
+    position:fixed;border-radius:50%;filter:blur(90px);opacity:.45;z-index:0;
+    animation:float 18s ease-in-out infinite;
+  }
+  .blob.b1{width:480px;height:480px;background:var(--primary);top:-120px;left:-120px}
+  .blob.b2{width:520px;height:520px;background:var(--accent);bottom:-160px;right:-140px;animation-delay:-6s}
+  .blob.b3{width:380px;height:380px;background:var(--secondary);top:40%;left:50%;animation-delay:-12s;opacity:.25}
+  @keyframes float{
+    0%,100%{transform:translate(0,0) scale(1)}
+    33%{transform:translate(60px,-40px) scale(1.08)}
+    66%{transform:translate(-40px,50px) scale(.95)}
+  }
+
+  /* Floating code snippets */
+  .code-float{
+    position:fixed;font-family:'JetBrains Mono',monospace;
+    color:rgba(203,213,225,.12);font-size:13px;pointer-events:none;
+    z-index:0;white-space:nowrap;
+  }
+  .code-float span{color:rgba(6,182,212,.25)}
+  .cf1{top:12%;left:4%;animation:drift 22s linear infinite}
+  .cf2{top:70%;left:8%;animation:drift 28s linear infinite reverse}
+  .cf3{top:20%;right:4%;animation:drift 25s linear infinite}
+  .cf4{top:82%;right:6%;animation:drift 30s linear infinite reverse}
+  @keyframes drift{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-20px)}
+    100%{transform:translateY(0)}
+  }
+
+  /* Canvas particles */
+  #particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+  /* Layout */
+  .wrap{
+    position:relative;z-index:2;
+    min-height:100vh;display:flex;flex-direction:column;
+    padding:28px 6vw;
+  }
+  nav{
+    display:flex;justify-content:space-between;align-items:center;
+    animation:fadeDown .9s ease both;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;
+    letter-spacing:.3px;
+  }
+  .logo-mark{
+    width:38px;height:38px;border-radius:10px;
+    background:var(--grad);
+    display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-weight:700;color:#fff;
+    box-shadow:0 8px 24px rgba(37,99,235,.45);
+    position:relative;
+  }
+  .logo-mark::after{
+    content:"";position:absolute;inset:0;border-radius:10px;
+    box-shadow:0 0 0 1px rgba(255,255,255,.15) inset;
+  }
+  .nav-links{display:flex;gap:22px;align-items:center}
+  .nav-links a{
+    color:var(--text-sec);text-decoration:none;font-size:14px;
+    transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--text)}
+  .notify-btn{
+    padding:10px 18px;border-radius:999px;border:none;cursor:pointer;
+    background:var(--grad);color:#fff;font-weight:600;font-size:14px;
+    box-shadow:0 8px 24px rgba(37,99,235,.35);
+    transition:transform .2s,box-shadow .2s;
+  }
+  .notify-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,99,235,.5)}
+
+  /* Hero */
+  main{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    max-width:1100px;margin:0 auto;width:100%;padding:40px 0;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 14px;border-radius:999px;
+    background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.3);
+    font-size:13px;color:var(--text-sec);width:fit-content;
+    margin-bottom:24px;
+    animation:fadeUp .8s .1s ease both;
+  }
+  .pulse{
+    width:8px;height:8px;border-radius:50%;background:var(--success);
+    box-shadow:0 0 0 0 rgba(16,185,129,.7);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}
+    70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}
+    100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+  }
+
+  h1{
+    font-size:clamp(42px,7vw,88px);font-weight:700;line-height:1.05;
+    letter-spacing:-.02em;margin-bottom:20px;
+    animation:fadeUp .9s .2s ease both;
+  }
+  h1 .s-letter{
+    background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    position:relative;display:inline-block;
+  }
+  h1 .s-letter::after{
+    content:"";position:absolute;left:0;right:0;bottom:-4px;height:3px;
+    background:var(--grad);border-radius:2px;opacity:.6;
+  }
+  .tagline{
+    font-size:clamp(16px,1.6vw,19px);color:var(--text-sec);
+    max-width:640px;margin-bottom:40px;
+    animation:fadeUp 1s .3s ease both;
+  }
+  .tagline strong{color:var(--text)}
+
+  /* Countdown */
+  .countdown{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    max-width:640px;margin-bottom:40px;
+    animation:fadeUp 1s .4s ease both;
+  }
+  .cd-card{
+    background:rgba(30,41,59,.6);backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(203,213,225,.1);
+    border-radius:16px;padding:20px 10px;text-align:center;
+    position:relative;overflow:hidden;
+    transition:transform .25s,border-color .25s;
+  }
+  .cd-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--grad);opacity:.7;
+  }
+  .cd-card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.4)}
+  .cd-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(28px,4vw,44px);font-weight:700;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;
+  }
+  .cd-label{
+    font-size:12px;text-transform:uppercase;letter-spacing:2px;
+    color:var(--text-sec);margin-top:8px;
+  }
+
+  /* Email form */
+  .subscribe{
+    display:flex;gap:10px;max-width:520px;margin-bottom:20px;
+    animation:fadeUp 1s .5s ease both;
+    flex-wrap:wrap;
+  }
+  .subscribe input{
+    flex:1;min-width:220px;
+    padding:14px 18px;border-radius:12px;
+    background:rgba(30,41,59,.7);border:1px solid rgba(203,213,225,.15);
+    color:var(--text);font-size:15px;font-family:inherit;
+    transition:border-color .2s,background .2s;
+  }
+  .subscribe input:focus{
+    outline:none;border-color:var(--primary);
+    background:rgba(30,41,59,.9);
+  }
+  .subscribe input::placeholder{color:var(--text-sec)}
+  .subscribe button{
+    padding:14px 26px;border-radius:12px;border:none;cursor:pointer;
+    background:var(--grad);color:#fff;font-weight:600;font-size:15px;
+    font-family:inherit;
+    box-shadow:0 8px 24px rgba(37,99,235,.35);
+    transition:transform .2s,box-shadow .2s;
+    white-space:nowrap;
+  }
+  .subscribe button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,99,235,.5)}
+  .form-msg{
+    font-size:13px;color:var(--success);min-height:18px;
+    animation:fadeUp .4s ease both;
+  }
+
+  /* Motto */
+  .motto{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    margin-top:28px;font-size:15px;color:var(--text-sec);
+    animation:fadeUp 1s .6s ease both;
+  }
+  .motto strong{
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:600;
+  }
+  .dot{color:var(--secondary)}
+
+  /* Features */
+  .features{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:14px;margin-top:50px;max-width:900px;
+    animation:fadeUp 1s .7s ease both;
+  }
+  .feat{
+    background:rgba(30,41,59,.5);backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(203,213,225,.08);
+    border-radius:14px;padding:18px;
+    transition:transform .25s,border-color .25s,background .25s;
+  }
+  .feat:hover{
+    transform:translateY(-4px);
+    border-color:rgba(6,182,212,.35);
+    background:rgba(30,41,59,.75);
+  }
+  .feat-icon{
+    width:36px;height:36px;border-radius:10px;
+    background:rgba(37,99,235,.15);
+    display:grid;place-items:center;margin-bottom:10px;
+    font-size:18px;
+  }
+  .feat h4{font-size:14px;margin-bottom:4px}
+  .feat p{font-size:12px;color:var(--text-sec);line-height:1.5}
+
+  /* Footer */
+  footer{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:30px;border-top:1px solid rgba(203,213,225,.08);
+    margin-top:40px;flex-wrap:wrap;gap:16px;
+    animation:fadeUp 1s .8s ease both;
+  }
+  .copy{font-size:13px;color:var(--text-sec)}
+  .socials{display:flex;gap:10px}
+  .socials a{
+    width:38px;height:38px;border-radius:10px;
+    background:rgba(30,41,59,.7);border:1px solid rgba(203,213,225,.1);
+    display:grid;place-items:center;color:var(--text-sec);
+    text-decoration:none;transition:all .25s;
+  }
+  .socials a:hover{
+    color:#fff;background:var(--grad);border-color:transparent;
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(37,99,235,.4);
+  }
+  .socials svg{width:18px;height:18px}
+
+  /* Animations */
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(24px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  @keyframes fadeDown{
+    from{opacity:0;transform:translateY(-16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  @media (max-width:640px){
+    .nav-links a:not(.notify-btn){display:none}
+    .countdown{grid-template-columns:repeat(4,1fr);gap:8px}
+    .cd-card{padding:16px 6px}
+    .cd-label{font-size:10px;letter-spacing:1px}
+    .features{grid-template-columns:repeat(2,1fr)}
+    .code-float{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<div class="code-float cf1">&lt;<span>div</span> class="<span>gws</span>"&gt;</div>
+<div class="code-float cf2">const <span>future</span> = await <span>build</span>();</div>
+<div class="code-float cf3">function <span>innovate</span>() { ... }</div>
+<div class="code-float cf4">&lt;/<span>GeekWithS</span>&gt;</div>
+
+<canvas id="particles"></canvas>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">
+      <img src="logo.jpeg" alt="GWS Logo" class="logo-mark" />
+      <span>Geek With <span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">S</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="notify-btn" onclick="document.getElementById('email').focus()">Notify Me</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="badge">
+      <span class="pulse"></span>
+      <span>Launching Soon - Something big is coming</span>
+    </div>
+
+    <h1>
+      The Future of Tech<br>
+      Starts with <span class="s-letter">S</span>.
+    </h1>
+
+    <p class="tagline">
+      <strong>Geek With S (GWS)</strong> is a technology-driven community empowering students, developers, designers, and innovators to <strong>learn, build, and grow together</strong>. We're crafting a space where ideas become reality.
+    </p>
+
+    <div class="countdown" id="countdown">
+      <div class="cd-card"><div class="cd-num" id="days">00</div><div class="cd-label">Days</div></div>
+      <div class="cd-card"><div class="cd-num" id="hours">00</div><div class="cd-label">Hours</div></div>
+      <div class="cd-card"><div class="cd-num" id="minutes">00</div><div class="cd-label">Minutes</div></div>
+      <div class="cd-card"><div class="cd-num" id="seconds">00</div><div class="cd-label">Seconds</div></div>
+    </div>
+
+    <form class="subscribe" id="subscribeForm" onsubmit="return handleSubscribe(event)">
+      <input type="email" id="email" placeholder="Enter your email for early access" required />
+      <button type="submit">Get Notified →</button>
+    </form>
+    <div class="form-msg" id="formMsg"></div>
+
+    <div class="motto">
+      <strong>Learn</strong><span class="dot">•</span>
+      <strong>Create</strong><span class="dot">•</span>
+      <strong>Innovate</strong><span class="dot">•</span>
+      <strong>Inspire</strong>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <h4>Programming Tips & Tutorials</h4>
+        <h4>Web & Mobile Development</h4>
+        <h4>Artificial Intelligence & Machine Learning</h4>
+      </div>
+      <div class="feat">
+        <h4>Cybersecurity & Ethical Hacking</h4>
+        <h4>UI/UX & Graphic Design</h4>
+        <h4>Cloud Computing & DevOps</h4>
+      </div>
+      <div class="feat">
+        <h4>Startup Ideas & Entrepreneurship</h4>
+        <h4>Learning Resources & Roadmaps</h4>
+        <h4>Coding Challenges & Hackathons</h4>
+      </div>
+      <div class="feat">
+        <h4>Career Guidance, Freelancing & Internship Opportunities</h4>
+        <h4>Latest Tech News & Innovations</h4>
+      </div>
+    </div>
+  </main>
+
+<footer>
+  <div class="copy">
+    © 2026 Geek With S • Building the Future, One Idea at a Time
+  </div>
+
+  <div class="socials">
+    <a href="https://github.com/GeekWithS"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.89-.39s1.97.13 2.89.39c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.73 18.27.5 12 .5z"/>
+      </svg>
+    </a>
+
+    <a href="https://geekwiths.github.io/GWS"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Website">
+      🌐
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Countdown — set launch date (30 days from now)
+  const launchDate = new Date('2026-08-01T00:00:00');
+  launchDate.setDate(launchDate.getDate() + 30);
+
+  function updateCountdown(){
+    const now = new Date().getTime();
+    const diff = launchDate.getTime() - now;
+    if(diff < 0){
+      document.getElementById('countdown').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;font-size:18px;color:var(--success)">🚀 We are LIVE!</div>';
+      return;
+    }
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const s = Math.floor((diff % (1000*60)) / 1000);
+    document.getElementById('days').textContent = String(d).padStart(2,'0');
+    document.getElementById('hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Subscribe handler
+  function handleSubscribe(e){
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const msg = document.getElementById('formMsg');
+    msg.textContent = `✓ Thanks! We'll notify ${email} when we launch.`;
+    document.getElementById('email').value = '';
+    setTimeout(()=>{ msg.textContent=''; }, 6000);
+    return false;
+  }
+
+  // Particle canvas
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const colors = ['#2563EB','#06B6D4','#7C3AED','#10B981'];
+  for(let i=0;i<60;i++){
+    particles.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: Math.random()*1.8 + 0.4,
+      vx: (Math.random()-0.5)*0.3,
+      vy: (Math.random()-0.5)*0.3,
+      c: colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // lines between close particles
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < 130){
+          ctx.strokeStyle = `rgba(37,99,235,${0.15*(1-dist/130)})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+</body>
+</html>
